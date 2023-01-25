@@ -1,0 +1,73 @@
+{%extends 'base.html'%}
+{%block body_block%}
+
+<div class="col-md-10 col-lg-8 col-xl-7">
+    <!-- Post preview-->
+    <div class="post-preview">
+        <form action="" method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <input type="submit" value="post" class="btn btn-success">
+        </form>
+    </div>
+    <!-- Divider-->
+    <hr class="my-4" />
+    <!-- Post preview-->
+    {%for t in title%}
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <!-- Post preview-->
+        <div class="post-preview">
+            <a href="post.html">
+                <h2 class="post-title">{{t.title}}</h2>
+                <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
+            </a>
+            <p class="post-meta">
+                Posted by
+                <a href="#!">{{t.user}}</a>
+                on {{t.create_date}}
+
+                <a href="{%url 'like' t.id%}" class="btn btn-sm btn-success">Like</a>
+                <span class="text-warning">{{t.upvote.all.count}}</span>
+                
+                <p>
+                   
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{forloop.counter}}" aria-expanded="false" aria-controls="collapseExample">
+                      comment
+                    </button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#commentlist{{forloop.counter}}" aria-expanded="false" aria-controls="collapseExample">
+                        view 
+                      </button>
+                  </p>
+                  <div class="collapse" id="collapseExample{{forloop.counter}}">
+                    <div class="card card-body">
+                        <form action=" {%url 'add-comment' t.id%}" method="post">
+                            {%csrf_token%}
+                            <textarea name="comment" id="" cols="30" rows="3" class="form-control"></textarea>
+                            <input type="submit" value="Done" class=" mt-2 btn btn-sm btn-success">
+                        </form>
+                    </div>
+                  </div>
+                  <div class="collapse" id="commentlist{{forloop.counter}}">
+                    <div class="card card-body">
+
+                        <ul class="list-group">
+                            {%for com in t.comment_set.all%}
+                            <li class="list-group-item">
+                                
+                                {{com.comment}}
+
+                            </li>
+                        {%endfor%}
+                        </ul>
+                    </div>
+                  </div>
+            </p>
+        </div>
+        <!-- Divider-->
+        <hr class="my-4" />
+        <!-- Post preview-->
+    </div>
+    {%endfor%}
+</div>
+
+{%endblock%}
